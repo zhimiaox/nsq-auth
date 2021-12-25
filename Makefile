@@ -12,10 +12,9 @@ app:
 	@$(foreach n, $(os-archs),\
 		os=$(shell echo "$(n)" | cut -d : -f 1);\
 		arch=$(shell echo "$(n)" | cut -d : -f 2);\
-		gomips=$(shell echo "$(n)" | cut -d : -f 3);\
 		target_suffix=$${os}_$${arch};\
 		echo "Build $${os}-$${arch}...";\
-		env CGO_ENABLED=0 GOOS=$${os} GOARCH=$${arch} GOMIPS=$${gomips} go build -trimpath -ldflags "$(LDFLAGS)" -o ./release/nsq_auth_$${target_suffix};\
+		env GOOS=$${os} GOARCH=$${arch} go build -ldflags "$(LDFLAGS)" -o ./release/nsq_auth_$${target_suffix};\
 		echo "Build $${os}-$${arch} done";\
 	)
 	@mv ./release/nsq_auth_windows_386 ./release/nsq_auth_windows_386.exe

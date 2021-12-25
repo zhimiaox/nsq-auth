@@ -1,20 +1,15 @@
-# compile for version
-make
-if [ $? -ne 0 ]; then
-    echo "make error"
-    exit 1
-fi
-
-# cross_compiles
-make -f ./Makefile
+#!/bin/sh
 
 rm -rf ./release/packages
 mkdir -p ./release/packages
 
-os_all='linux windows darwin freebsd'
-arch_all='386 amd64 arm arm64 mips64 mips64le mips mipsle'
+# cross_compiles
+make -f ./Makefile
 
 cd ./release
+
+os_all='linux windows darwin freebsd'
+arch_all='386 amd64 arm arm64 mips64 mips64le mips mipsle'
 
 for os in $os_all; do
     for arch in $arch_all; do
