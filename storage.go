@@ -2,39 +2,52 @@ package main
 
 import (
 	"sync"
+)
 
-	"github.com/nsq-auth/models"
+var (
+	storageIns  Storage
+	storageOnce sync.Once
 )
 
 type Storage interface {
 	Refresh()
-	Get(secret string) *models.Authorization
+	Get(secret string) []Authorization
+	Set(secret string, auth []Authorization)
 }
 
 type storage struct {
 	sync.RWMutex
-	data map[string]models.Authorization
+	data map[string][]Authorization
 }
 
 func (s *storage) Refresh() {
 	s.Lock()
-	s.data = make(map[string]models.Authorization)
-	s.Unlock()
-}
-
-func (s *storage) Get(secret string) *models.Authorization {
-	s.RLock()
-	defer s.RUnlock()
-	v := s.data[secret]
-	return &v
-}
-
-func NewStorage() Storage {
-	return &storage{
-		data: make(map[string]models.Authorization),
+	defer s.Unlock()
+	s.data = make(map[string][]Authorization)
+	for _, v := range GetPlugins() {
+		for secret, auth := range v.Authorization() {
+			s.data[secret] = auth
+		}
 	}
 }
 
-func RefreshData() {
+func (s *storage) Get(secret string) []Authorization {
+	s.RLock()
+	defer s.RUnlock()
+	return s.data[secret]
+}
 
+func (s *storage) Set(secret string, auth []Authorization) {
+	s.Lock()
+	defer s.Unlock()
+	s.data[secret] = auth
+}
+
+func GetStorage() Storage {
+	storageOnce.Do(func() {
+		storageIns = &storage{
+			data: make(map[string][]Authorization),
+		}
+	})
+	return storageIns
 }

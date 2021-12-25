@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nsq-auth/models"
 )
 
 type api struct {
@@ -17,23 +16,28 @@ func (a *api) Ping(c *gin.Context) {
 }
 
 func (a *api) Auth(c *gin.Context) {
-	req := &models.AuthReq{}
+	req := &AuthReq{}
 	err := c.ShouldBindQuery(req)
 	if err != nil {
 		return
 	}
-
-	if len(resp.Authorizations) <= 0 {
+	auth := GetStorage().Get(req.Secret)
+	if auth == nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"message": "NOT_AUTHORIZED",
 		})
 		return
 	}
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, AuthResp{
+		TTL:            TTL,
+		Identity:       Identity,
+		IdentityURL:    IdentityURL,
+		Authorizations: auth,
+	})
 }
 
 func (a api) Refresh(c *gin.Context) {
-
+	GetStorage().Refresh()
 }
 
 // StartAPI 启动web服务

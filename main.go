@@ -5,21 +5,21 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 )
 
 var (
-	APIAddr             string
-	ExpiredAuthDuration time.Duration
-	Identity            string
-	IdentityURL         string
+	APIAddr     string
+	TTL         int
+	Identity    string
+	IdentityURL string
+	RootSecret  string
 )
 
 func main() {
 	flag.StringVar(&APIAddr, "addr", ":1325", "api port default :1325")
 	flag.StringVar(&Identity, "identity", "zhimiaox-nsq-auth", "identity default zhimiaox-nsq-auth")
 	flag.StringVar(&IdentityURL, "auth-url", "http://localhost:1325", "auth-url")
-	flag.DurationVar(&ExpiredAuthDuration, "expire", time.Minute, "auth expire duration default 1m")
+	flag.IntVar(&TTL, "ttl", 60, "auth expire duration unit s, default 60")
 
 	go StartAPI()
 	// wait for signal to exit
