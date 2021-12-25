@@ -1,19 +1,15 @@
 package main
 
-import (
-	"flag"
-)
-
 type pluginRootSecret struct {
 	Secret string
 }
 
-func init() {
-	p := &pluginRootSecret{}
-	flag.StringVar(&p.Secret, "secret", "", "root secret allow all push and sub topic and channel")
-	if p.Secret != "" {
-		AddPlugin(p)
+func (p *pluginRootSecret) Init() Plugin {
+	if SystemOpts.Secret != "" {
+		p.Secret = SystemOpts.Secret
+		return p
 	}
+	return nil
 }
 
 func (p *pluginRootSecret) Authorization() map[string][]Authorization {

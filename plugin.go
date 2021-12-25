@@ -2,8 +2,10 @@ package main
 
 var plugins []Plugin = make([]Plugin, 0)
 
-func AddPlugin(p Plugin) {
-	plugins = append(plugins, p)
+func InitPlugin() {
+	if p := new(pluginRootSecret).Init(); p != nil {
+		plugins = append(plugins, p)
+	}
 }
 
 func GetPlugins() []Plugin {
@@ -12,4 +14,5 @@ func GetPlugins() []Plugin {
 
 type Plugin interface {
 	Authorization() map[string][]Authorization
+	Init() Plugin
 }

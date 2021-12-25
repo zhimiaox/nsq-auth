@@ -29,25 +29,24 @@ func (a *api) Auth(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, AuthResp{
-		TTL:            TTL,
-		Identity:       Identity,
-		IdentityURL:    IdentityURL,
+		TTL:            SystemOpts.TTL,
+		Identity:       SystemOpts.Identity,
+		IdentityURL:    SystemOpts.IdentityURL,
 		Authorizations: auth,
 	})
 }
 
-func (a api) Refresh(c *gin.Context) {
+func (a *api) Refresh(_ *gin.Context) {
 	GetStorage().Refresh()
 }
 
-// StartAPI 启动web服务
-func StartAPI() {
+// APIRoute 启动web服务
+func APIRoute() *gin.Engine {
 	r := gin.Default()
 	rImpl := api{}
 	r.GET("/ping", rImpl.Ping)
 	r.GET("/auth", rImpl.Auth)
 	r.GET("/refresh", rImpl.Refresh)
-	if err := r.Run(APIAddr); err != nil {
-		panic(err)
-	}
+	return r
+
 }
