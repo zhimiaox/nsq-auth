@@ -15,6 +15,7 @@ var SystemOpts struct {
 	IdentityURL string `short:"u" long:"auth-url" description:"auth-url" default:"http://localhost:1325"`
 	TTL         int    `short:"t" long:"ttl" description:"auth expire duration unit s, default 60" default:"60"`
 	Secret      string `short:"s" long:"secret" description:"root secret allow all push and sub topic and channel" default:""` //nolint:lll
+	CSV         string `short:"f" long:"csv" description:"csv secret file path" default:""`
 }
 
 func main() {

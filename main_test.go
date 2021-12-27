@@ -14,8 +14,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//nolint:lll    // NSQ RUN Test : docker run --name nsqd -p 4150:4150 -p 4151:4151  nsqio/nsq /nsqd --auth-http-address="192.168.1.242:1325"
+
+const (
+	AuthHost = "http://localhost:1325"
+	host     = "localhost:4150"
+	Secret   = "PrNQuOLcyAwDPJO7" //nolint:gosec
+)
+
 func TestPluginRootSecret_Authorization(t *testing.T) {
-	get, err := http.Get("http://localhost:1325/auth?secret=123")
+	get, err := http.Get(AuthHost + "/auth?secret=123")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,15 +35,13 @@ func TestPluginRootSecret_Authorization(t *testing.T) {
 
 func BenchmarkApi_Auth(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		get, err := http.Get("http://localhost:1325/auth?secret=123")
+		get, err := http.Get(AuthHost + "/auth?secret=123") //nolint:bodyclose
 		if err != nil {
 			b.Fatal(err)
 		}
 		assert.Equal(b, 200, get.StatusCode)
 	}
 }
-
-const host = "localhost:4150"
 
 type handle struct {
 }
@@ -47,7 +53,7 @@ func (h handle) HandleMessage(message *nsq.Message) error {
 
 func TestPush(t *testing.T) {
 	conf := nsq.NewConfig()
-	conf.AuthSecret = "123"
+	conf.AuthSecret = Secret
 	producer, err := nsq.NewProducer(host, conf)
 	if err != nil {
 		return
@@ -63,7 +69,7 @@ func TestPush(t *testing.T) {
 
 func TestSub1(t *testing.T) {
 	conf := nsq.NewConfig()
-	conf.AuthSecret = "123"
+	conf.AuthSecret = Secret
 	consumer, err := nsq.NewConsumer("t1", "c1", conf)
 	if err != nil {
 		t.Fatal(err)
@@ -82,8 +88,8 @@ func TestSub1(t *testing.T) {
 
 func TestSub2(t *testing.T) {
 	conf := nsq.NewConfig()
-	conf.AuthSecret = "123"
-	consumer, err := nsq.NewConsumer("t1", "c1", conf)
+	conf.AuthSecret = Secret
+	consumer, err := nsq.NewConsumer("t1", "c2", conf)
 	if err != nil {
 		t.Fatal(err)
 	}

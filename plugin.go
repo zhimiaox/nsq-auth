@@ -3,8 +3,13 @@ package main
 var plugins []Plugin = make([]Plugin, 0)
 
 func InitPlugin() {
-	if p := new(pluginRootSecret).Init(); p != nil {
-		plugins = append(plugins, p)
+	for _, p := range []Plugin{
+		new(pluginRootSecret),
+		new(pluginCSVSecret),
+	} {
+		if p.Init() != nil {
+			plugins = append(plugins, p)
+		}
 	}
 }
 

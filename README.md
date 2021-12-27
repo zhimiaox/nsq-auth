@@ -14,6 +14,7 @@ Application Options:
   -u, --auth-url= auth-url (default: http://localhost:1325)
   -t, --ttl=      auth expire duration unit s, default 60 (default: 60)
   -s, --secret=   root secret allow all push and sub topic and channel
+  -f, --csv=      csv secret file path
 
 Help Options:
   -h, --help      Show this help message
@@ -22,8 +23,26 @@ Help Options:
 
 ### Example
 
+> root secret
+
 ```shell
 ./nsq-auth --secret "123456"
+./nsqd --auth-http-address "localhost:1325"
+```
+
+> csv file secret
+
+./example.csv
+
+| secret           | topic | channel | allow             |
+|:-----------------|:------|:--------|:------------------|
+| PrNQuOLcyAwDPJO7 | t1    |         | publish           |
+| PrNQuOLcyAwDPJO7 | t1    | c1      | subscribe         |
+| PrNQuOLcyAwDPJO7 | t2    | .\*     | publish subscribe |
+
+
+```shell
+./nsq-auth --csv "./example.csv"
 ./nsqd --auth-http-address "localhost:1325"
 ```
 

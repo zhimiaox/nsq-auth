@@ -48,5 +48,4 @@ func APIRoute() *gin.Engine {
 	r.GET("/auth", rImpl.Auth)
 	r.GET("/refresh", rImpl.Refresh)
 	return r
-
 }
