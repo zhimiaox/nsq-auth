@@ -23,8 +23,8 @@ Help Options:
 ### Example
 
 ```shell
-./nsq-auth -secret "123456"
-./nsqd -auth-http-address "localhost:1325"
+./nsq-auth --secret "123456"
+./nsqd --auth-http-address "localhost:1325"
 ```
 
 ### Test
