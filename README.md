@@ -21,7 +21,7 @@ Help Options:
 
 ```
 
-### Example
+### Example Shell
 
 > root secret
 
@@ -44,6 +44,33 @@ Help Options:
 ```shell
 ./nsq-auth --csv "./example.csv"
 ./nsqd --auth-http-address "localhost:1325"
+```
+
+### Example Docker
+
+```shell
+docker pull zhimiao/nsq-auth:latest
+```
+
+./docker-compose.yml
+
+```yaml
+version: "3"
+services:
+  nsqd:
+    image: nsqio/nsq
+    depends_on:
+      - nsq-auth
+    ports:
+      - "4150:4150"
+    volumes:
+      - "./nsq/data:/data"
+    restart: always
+    command: /nsqd --auth-http-address="nsq-auth:1325"
+  nsq-auth:
+    image: zhimiao/nsq-auth:latest
+    restart: always
+    command: --secret="jV22WdmaXxHWAiAh"
 ```
 
 ### Test
