@@ -32,7 +32,7 @@ Help Options:
 
 > csv file secret
 
-./example.csv
+[./example.csv](./example.csv)
 
 | secret           | topic | channel | allow             |
 |:-----------------|:------|:--------|:------------------|
