@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/csv"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -32,7 +31,7 @@ func (p *pluginCSVSecret) Init() Plugin {
 }
 
 func (p *pluginCSVSecret) Authorization() map[string][]Authorization {
-	data, err := ioutil.ReadFile(SystemOpts.CSV)
+	data, err := os.ReadFile(SystemOpts.CSV)
 	if err != nil {
 		log.Printf("csv file load err %s\n", err.Error())
 		return nil

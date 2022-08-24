@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -28,7 +28,7 @@ func TestPluginRootSecret_Authorization(t *testing.T) {
 		t.Fatal(err)
 	}
 	assert.Equal(t, 200, get.StatusCode)
-	body, _ := ioutil.ReadAll(get.Body)
+	body, _ := io.ReadAll(get.Body)
 	_ = get.Body.Close()
 	t.Log(string(body))
 }
