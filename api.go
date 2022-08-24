@@ -29,9 +29,9 @@ func (a *api) Auth(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, AuthResp{
-		TTL:            SystemOpts.TTL,
-		Identity:       SystemOpts.Identity,
-		IdentityURL:    SystemOpts.IdentityURL,
+		TTL:            Opts.TTL,
+		Identity:       Opts.Identity,
+		IdentityURL:    Opts.IdentityURL,
 		Authorizations: auth,
 	})
 }

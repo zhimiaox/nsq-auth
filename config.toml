@@ -1,0 +1,17 @@
+## api port, default: ":1325"
+address = ":1325"
+
+## identity default: "zhimiaox-nsq-auth"
+identity = "zhimiaox-nsq-auth"
+
+## auth-url default: "http://localhost:1325"
+auth_url = "http://localhost:1325"
+
+## auth expire duration unit s, default: 60
+ttl = 60
+
+## root secret allow all push and sub topic and channel
+secret = ""
+
+## csv secret file path
+csv = ""

@@ -6,28 +6,34 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/jessevdk/go-flags"
+	"github.com/BurntSushi/toml"
+	"github.com/mreiferson/go-options"
 )
 
-var SystemOpts struct {
-	APIAddr     string `short:"a" long:"address" description:"api port default :1325" default:":1325"`
-	Identity    string `short:"i" long:"identity" description:"identity default zhimiaox-nsq-auth" default:"zhimiaox-nsq-auth"` //nolint:lll
-	IdentityURL string `short:"u" long:"auth-url" description:"auth-url" default:"http://localhost:1325"`
-	TTL         int    `short:"t" long:"ttl" description:"auth expire duration unit s, default 60" default:"60"`
-	Secret      string `short:"s" long:"secret" description:"root secret allow all push and sub topic and channel" default:""` //nolint:lll
-	CSV         string `short:"f" long:"csv" description:"csv secret file path" default:""`
-}
+var Opts *Options
 
 func main() {
-	_, err := flags.NewParser(&SystemOpts, flags.Default).Parse()
-	if err != nil {
-		log.Fatalln(err.Error())
+	Opts = NewOptions()
+
+	flagSet := FlagSet(Opts)
+	flagSet.Parse(os.Args[1:])
+
+	var cfg config
+	configFile := flagSet.Lookup("config").Value.String()
+	if configFile != "" {
+		_, err := toml.DecodeFile(configFile, &cfg)
+		if err != nil {
+			log.Fatalf("failed to load config file %s - %s", configFile, err)
+		}
 	}
+
+	options.Resolve(Opts, flagSet, cfg)
+
 	InitPlugin()
 	// 初始化权限数据
 	GetStorage().Refresh()
 	go func() {
-		if err := APIRoute().Run(SystemOpts.APIAddr); err != nil {
+		if err := APIRoute().Run(Opts.APIAddr); err != nil {
 			panic(err)
 		}
 	}()

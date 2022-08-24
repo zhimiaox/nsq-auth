@@ -5,8 +5,8 @@ type pluginRootSecret struct {
 }
 
 func (p *pluginRootSecret) Init() Plugin {
-	if SystemOpts.Secret != "" {
-		p.Secret = SystemOpts.Secret
+	if Opts.Secret != "" {
+		p.Secret = Opts.Secret
 		return p
 	}
 	return nil

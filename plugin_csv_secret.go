@@ -16,10 +16,10 @@ type pluginCSVSecret struct {
 
 func (p *pluginCSVSecret) Init() Plugin {
 	p.Split = " "
-	if SystemOpts.CSV == "" {
+	if Opts.CSV == "" {
 		return nil
 	}
-	info, err := os.Stat(SystemOpts.CSV)
+	info, err := os.Stat(Opts.CSV)
 	if err != nil {
 		log.Printf("csv plugin init err %s\n", err.Error())
 		return nil
@@ -32,7 +32,7 @@ func (p *pluginCSVSecret) Init() Plugin {
 }
 
 func (p *pluginCSVSecret) Authorization() map[string][]Authorization {
-	data, err := ioutil.ReadFile(SystemOpts.CSV)
+	data, err := ioutil.ReadFile(Opts.CSV)
 	if err != nil {
 		log.Printf("csv file load err %s\n", err.Error())
 		return nil

@@ -3,8 +3,10 @@ module github.com/nsq-auth
 go 1.17
 
 require (
+	github.com/BurntSushi/toml v1.2.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/jessevdk/go-flags v1.5.0
+	github.com/mreiferson/go-options v1.0.0
 	github.com/nsqio/go-nsq v1.1.0
 	github.com/stretchr/testify v1.4.0
 )
